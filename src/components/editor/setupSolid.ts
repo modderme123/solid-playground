@@ -6,6 +6,7 @@ import { Registry } from 'monaco-textmate';
 import { wireTmGrammars } from 'monaco-editor-textmate';
 import typescriptReactTM from './TypeScriptReact.tmLanguage.json';
 import cssTM from './css.tmLanguage.json';
+import htmlTM from './html.tmLanguage.json';
 import sPackageJson from '/node_modules/solid-js/package.json?raw';
 import sWebPackageJson from '/node_modules/solid-js/web/package.json?raw';
 import sJsxRuntime from '/node_modules/solid-js/jsx-runtime.d.ts?raw';
@@ -81,7 +82,7 @@ const registry = new Registry({
   async getGrammarDefinition(scopeName) {
     return {
       format: 'json',
-      content: scopeName === 'source.tsx' ? typescriptReactTM : cssTM,
+      content: scopeName === 'source.tsx' ? typescriptReactTM : scopeName === 'source.html' ? cssTM : htmlTM,
     };
   },
 });
@@ -90,6 +91,7 @@ const grammars = new Map();
 grammars.set('typescript', 'source.tsx');
 grammars.set('javascript', 'source.tsx');
 grammars.set('css', 'source.css');
+grammars.set('html', 'source.html');
 
 // monaco's built-in themes aren't powereful enough to handle TM tokens
 // https://github.com/Nishkalkashyap/monaco-vscode-textmate-theme-converter#monaco-vscode-textmate-theme-converter

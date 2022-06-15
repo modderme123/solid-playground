@@ -1,14 +1,18 @@
-import { Show, For, createSignal, createEffect, batch, Match, Switch, onCleanup } from 'solid-js';
+import { Show, For, createSignal, createEffect, batch, onMount, Match, Switch, onCleanup } from 'solid-js';
 import { Icon } from 'solid-heroicons';
-import { refresh, terminal } from 'solid-heroicons/outline';
+import { refresh } from 'solid-heroicons/outline';
 import { unwrap } from 'solid-js/store';
-import { Preview } from './preview';
 import { TabItem, TabList } from './tabs';
 import { GridResizer } from './gridResizer';
-import { Error } from './error';
-import { throttle } from '@solid-primitives/scheduled';
+import { debounce, throttle } from '@solid-primitives/scheduled';
+import { FileSystemTree, load } from '@webcontainer/api';
+import { useZoom } from '../hooks/useZoom';
+import { once } from '../utils/cache';
 import { createMediaQuery } from '@solid-primitives/media';
 import { editor, Uri } from 'monaco-editor';
+import { Terminal } from 'xterm';
+import { FitAddon } from 'xterm-addon-fit';
+import 'xterm/css/xterm.css';
 
 import MonacoTabs from './editor/monacoTabs';
 import Editor from './editor';
@@ -27,7 +31,6 @@ const Repl: ReplProps = (props) => {
 
   const tabRefs = new Map<string, HTMLSpanElement>();
 
-  const [error, setError] = createSignal('');
   const [compiled, setCompiled] = createSignal('');
   const [mode, setMode] = createSignal<typeof compileMode[keyof typeof compileMode]>(compileMode.DOM);
 
@@ -73,8 +76,91 @@ const Repl: ReplProps = (props) => {
     });
   }
 
+  let terminal = new Terminal({ convertEol: true });
+  const fitAddon = new FitAddon();
+  terminal.loadAddon(fitAddon);
+  let debouncedFit = debounce(() => fitAddon.fit(), 17);
+  let observer = new ResizeObserver(() => debouncedFit());
+  onCleanup(() => {
+    observer.disconnect();
+    fitAddon.dispose();
+    terminal.dispose();
+  });
+
+  const [magicURL, setMagicURL] = createSignal(
+    'data:text/html,<p style="color:gray;font-family:sans-serif">Booting webcontainer</p>',
+    { equals: false },
+  );
+
+  let webcontainer = once('webcontainer', () => load().then((x) => x.boot()));
+
+  let treePromise: Promise<void>;
+  onMount(async () => {
+    terminal.write('Booting webcontainer... \n');
+    let container = await webcontainer;
+
+    container.on('server-ready', (_, url) => {
+      setMagicURL(url);
+      setOutputTab(0);
+    });
+
+    await treePromise;
+
+    setOutputTab(2);
+
+    terminal.write('\x1bc');
+    terminal.write('> npm i\n');
+    let result = await container.run(
+      {
+        command: 'npm',
+        args: ['i'],
+      },
+      {
+        output: (data) => {
+          terminal.write(data);
+        },
+      },
+    );
+    await result.onExit;
+
+    terminal.write('\n> npm run start\n');
+    result = await container.run(
+      {
+        command: 'npm',
+        args: ['run', 'start'],
+      },
+      {
+        output: (data) => {
+          terminal.write(data);
+        },
+      },
+    );
+    await result.onExit;
+  });
+
+  const loadTree = () => {
+    let tree = {} as FileSystemTree;
+    for (const tab of props.tabs) {
+      const pieces = tab.name.split('/');
+      let segment = tree;
+      for (let i = 0; i < pieces.length - 1; i++) {
+        const piece = pieces[i];
+        if (!segment[piece]) {
+          const x = { directory: {} };
+          segment[piece] = x;
+          segment = x.directory;
+        }
+      }
+      segment[pieces[pieces.length - 1]] = {
+        file: { contents: tab.source },
+      };
+    }
+    treePromise = webcontainer.then((x) => x.loadFiles(tree));
+  };
+  createEffect(loadTree);
+
   const [edit, setEdit] = createSignal(-1);
-  const [outputTab, setOutputTab] = createSignal(0);
+  const [outputTab, setOutputTab] = createSignal(2);
 
   let model: editor.ITextModel;
   createEffect(() => {
@@ -82,18 +168,10 @@ const Repl: ReplProps = (props) => {
     model = editor.createModel('', 'typescript', uri);
     onCleanup(() => model.dispose());
   });
-
   compiler.addEventListener('message', ({ data }) => {
-    const { event, compiled, error } = data;
+    const { compiled } = data;
 
-    if (event === 'ERROR') return setError(error);
-    else setError('');
-
-    if (event === 'ROLLUP') {
-      setCompiled(compiled);
-    } else {
-      model.setValue(compiled);
-    }
+    setCompiled(compiled || '/* not available */');
 
     console.log(`Compilation took: ${performance.now() - now}ms`);
   });
@@ -110,18 +188,12 @@ const Repl: ReplProps = (props) => {
   }, 250);
 
   const compile = () => {
-    applyCompilation(
-      outputTab() == 0
-        ? {
-            event: 'ROLLUP',
-            tabs: unwrap(props.tabs),
-          }
-        : {
-            event: 'BABEL',
-            tab: unwrap(props.tabs.find((tab) => tab.name == props.current)),
-            compileOpts: mode(),
-          },
-    );
+    if (outputTab() != 1) return;
+    applyCompilation({
+      event: 'BABEL',
+      tab: unwrap(props.tabs.find((tab) => tab.name == props.current)),
+      compileOpts: mode(),
+    });
   };
 
   /**
@@ -163,9 +235,15 @@ const Repl: ReplProps = (props) => {
     setLeft(percentageAdjusted);
   };
 
-  const [reloadSignal, reload] = createSignal(false, { equals: false });
-  const [devtoolsOpen, setDevtoolsOpen] = createSignal(true);
   const [displayErrors, setDisplayErrors] = createSignal(true);
+
+  const { zoomState } = useZoom();
+  const styleScale = () => {
+    if (zoomState.scale === 100 || !zoomState.scaleIframe) return '';
+    return `width: ${zoomState.scale}%; height: ${zoomState.scale}%; transform: scale(${
+      zoomState.zoom / 100
+    }); transform-origin: 0 0;`;
+  };
 
   return (
     <div
@@ -267,10 +345,6 @@ const Repl: ReplProps = (props) => {
             displayErrors={displayErrors()}
           />
         </Show>
-
-        <Show when={displayErrors() && error()}>
-          <Error onDismiss={() => setError('')} message={error()} />
-        </Show>
       </div>
 
       <GridResizer ref={resizer} isHorizontal={isHorizontal()} onResize={changeLeft} />
@@ -282,23 +356,11 @@ const Repl: ReplProps = (props) => {
               type="button"
               title="Refresh the page"
               class="py-2 px-3 disabled:cursor-not-allowed disabled:opacity-25 active:animate-spin"
-              onClick={[reload, true]}
+              onClick={() => setMagicURL(magicURL())}
               disabled={outputTab() != 0}
             >
               <span class="sr-only">Refresh the page</span>
               <Icon path={refresh} class="h-5" />
-            </button>
-          </TabItem>
-          <TabItem>
-            <button
-              type="button"
-              title="Open the devtools"
-              class="py-2 px-3 disabled:cursor-not-allowed disabled:opacity-25"
-              onClick={() => setDevtoolsOpen(!devtoolsOpen())}
-              disabled={outputTab() != 0}
-            >
-              <span class="sr-only">Open the devtools</span>
-              <Icon path={terminal} class="h-5" />
             </button>
           </TabItem>
           <TabItem class="flex-1" active={outputTab() == 0}>
@@ -307,28 +369,29 @@ const Repl: ReplProps = (props) => {
             </button>
           </TabItem>
           <TabItem class="flex-1" active={outputTab() == 1}>
-            <button
-              type="button"
-              class="w-full -mb-0.5 py-2"
-              onClick={() => {
-                setOutputTab(1);
-                setMode(compileMode.DOM);
-              }}
-            >
+            <button type="button" class="w-full -mb-0.5 py-2" onClick={[setOutputTab, 1]}>
               Output
+            </button>
+          </TabItem>
+          <TabItem class="flex-1" active={outputTab() == 2}>
+            <button type="button" class="w-full -mb-0.5 py-2" onClick={[setOutputTab, 2]}>
+              Terminal
             </button>
           </TabItem>
         </TabList>
 
         <Switch>
           <Match when={outputTab() == 0}>
-            <Preview
-              reloadSignal={reloadSignal()}
-              devtools={devtoolsOpen()}
-              isDark={props.dark}
-              code={compiled()}
-              classList={{
-                'md:row-start-2': !props.isHorizontal,
+            <iframe class="w-full h-full" allow="cross-origin-isolated" src={magicURL()} style={styleScale()} />
+          </Match>
+          <Match when={outputTab() == 2}>
+            <div
+              class="h-full w-full overflow-hidden"
+              ref={(el) => {
+                terminal.open(el);
+                fitAddon.fit();
+                observer.observe(el);
+                onCleanup(() => observer.unobserve(el));
               }}
             />
           </Match>

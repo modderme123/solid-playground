@@ -56,10 +56,7 @@
         },
         {
           "match": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(break|continue|goto)\\s+([_$[:alpha:]][_$[:alnum:]]*)(?![_$[:alnum:]])(?:(?=\\.\\.\\.)|(?!\\.))",
-          "captures": {
-            "1": { "name": "keyword.control.loop.tsx" },
-            "2": { "name": "entity.name.label.tsx" }
-          }
+          "captures": { "1": { "name": "keyword.control.loop.tsx" }, "2": { "name": "entity.name.label.tsx" } }
         },
         {
           "name": "keyword.control.loop.tsx",
@@ -107,10 +104,7 @@
         },
         {
           "match": "([_$[:alpha:]][_$[:alnum:]]*)\\s*(:)",
-          "captures": {
-            "1": { "name": "entity.name.label.tsx" },
-            "2": { "name": "punctuation.separator.label.tsx" }
-          }
+          "captures": { "1": { "name": "entity.name.label.tsx" }, "2": { "name": "punctuation.separator.label.tsx" } }
         }
       ]
     },
@@ -268,9 +262,7 @@
           "name": "meta.var-single-variable.expr.tsx",
           "begin": "(?x)([_$[:alpha:]][_$[:alnum:]]*)(?=\\s*\n# function assignment |\n(=\\s*(\n  ((async\\s+)?(\n    (function\\s*[(<*]) |\n    (function\\s+) |\n    ([_$[:alpha:]][_$[:alnum:]]*\\s*=>)\n  )) |\n  ((async\\s*)?(\n    ((<\\s*$)|([\\(]\\s*((([\\{\\[]\\s*)?$)|((\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})\\s*((:\\s*\\{?$)|((\\s*([^<>\\(\\)\\{\\}]|\\<([^<>]|\\<([^<>]|\\<[^<>]+\\>)+\\>)+\\>|\\([^\\(\\)]+\\)|\\{[^\\{\\}]+\\})+\\s*)?=\\s*)))|((\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])\\s*((:\\s*\\[?$)|((\\s*([^<>\\(\\)\\{\\}]|\\<([^<>]|\\<([^<>]|\\<[^<>]+\\>)+\\>)+\\>|\\([^\\(\\)]+\\)|\\{[^\\{\\}]+\\})+\\s*)?=\\s*)))))) |\n    # sure shot arrow functions even if => is on new line\n(\n  (<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<]|\\<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<]|\\<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<])*\\>)*\\>)*>\\s*)?\n  [(]\\s*(\\/\\*([^\\*]|(\\*[^\\/]))*\\*\\/\\s*)*\n  (\n    ([)]\\s*:) |                                                                                       # ():\n    ((\\.\\.\\.\\s*)?[_$[:alpha:]][_$[:alnum:]]*\\s*:)                                                                  # [(]param: | [(]...param:\n  )\n) |\n(\n  [<]\\s*[_$[:alpha:]][_$[:alnum:]]*\\s+extends\\s*[^=>]                                                              # < typeparam extends\n) |\n# arrow function possible to detect only with => on same line\n(\n  (<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<]|\\<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<]|\\<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<])*\\>)*\\>)*>\\s*)?                                                                                 # typeparameters\n  \\(\\s*(\\/\\*([^\\*]|(\\*[^\\/]))*\\*\\/\\s*)*(([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\.\\.\\.\\s*[_$[:alpha:]]))([^()\\'\\\"\\`]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))*)?\\)   # parameters\n  (\\s*:\\s*([^<>\\(\\)\\{\\}]|\\<([^<>]|\\<([^<>]|\\<[^<>]+\\>)+\\>)+\\>|\\([^\\(\\)]+\\)|\\{[^\\{\\}]+\\})+)?                                                                        # return type\n  \\s*=>                                                                                               # arrow operator\n)\n  ))\n)) |\n# typeannotation is fn type: < | () | (... | (param: | (param, | (param? | (param= | (param) =>\n(:\\s*(\n  (<) |\n  ([(]\\s*(\n    ([)]) |\n    (\\.\\.\\.) |\n    ([_$[:alnum:]]+\\s*(\n      ([:,?=])|\n      ([)]\\s*=>)\n    ))\n  ))\n)) |\n(:\\s*(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))Function(?![_$[:alnum:]])(?:(?=\\.\\.\\.)|(?!\\.))) |\n(:\\s*((<\\s*$)|([\\(]\\s*((([\\{\\[]\\s*)?$)|((\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})\\s*((:\\s*\\{?$)|((\\s*([^<>\\(\\)\\{\\}]|\\<([^<>]|\\<([^<>]|\\<[^<>]+\\>)+\\>)+\\>|\\([^\\(\\)]+\\)|\\{[^\\{\\}]+\\})+\\s*)?=\\s*)))|((\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])\\s*((:\\s*\\[?$)|((\\s*([^<>\\(\\)\\{\\}]|\\<([^<>]|\\<([^<>]|\\<[^<>]+\\>)+\\>)+\\>|\\([^\\(\\)]+\\)|\\{[^\\{\\}]+\\})+\\s*)?=\\s*))))))) |\n(:\\s*(=>|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(<[^<>]*>)|[^<>(),=])+=\\s*(\n  ((async\\s+)?(\n    (function\\s*[(<*]) |\n    (function\\s+) |\n    ([_$[:alpha:]][_$[:alnum:]]*\\s*=>)\n  )) |\n  ((async\\s*)?(\n    ((<\\s*$)|([\\(]\\s*((([\\{\\[]\\s*)?$)|((\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})\\s*((:\\s*\\{?$)|((\\s*([^<>\\(\\)\\{\\}]|\\<([^<>]|\\<([^<>]|\\<[^<>]+\\>)+\\>)+\\>|\\([^\\(\\)]+\\)|\\{[^\\{\\}]+\\})+\\s*)?=\\s*)))|((\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])\\s*((:\\s*\\[?$)|((\\s*([^<>\\(\\)\\{\\}]|\\<([^<>]|\\<([^<>]|\\<[^<>]+\\>)+\\>)+\\>|\\([^\\(\\)]+\\)|\\{[^\\{\\}]+\\})+\\s*)?=\\s*)))))) |\n    # sure shot arrow functions even if => is on new line\n(\n  (<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<]|\\<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<]|\\<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<])*\\>)*\\>)*>\\s*)?\n  [(]\\s*(\\/\\*([^\\*]|(\\*[^\\/]))*\\*\\/\\s*)*\n  (\n    ([)]\\s*:) |                                                                                       # ():\n    ((\\.\\.\\.\\s*)?[_$[:alpha:]][_$[:alnum:]]*\\s*:)                                                                  # [(]param: | [(]...param:\n  )\n) |\n(\n  [<]\\s*[_$[:alpha:]][_$[:alnum:]]*\\s+extends\\s*[^=>]                                                              # < typeparam extends\n) |\n# arrow function possible to detect only with => on same line\n(\n  (<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<]|\\<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<]|\\<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<])*\\>)*\\>)*>\\s*)?                                                                                 # typeparameters\n  \\(\\s*(\\/\\*([^\\*]|(\\*[^\\/]))*\\*\\/\\s*)*(([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\.\\.\\.\\s*[_$[:alpha:]]))([^()\\'\\\"\\`]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))*)?\\)   # parameters\n  (\\s*:\\s*([^<>\\(\\)\\{\\}]|\\<([^<>]|\\<([^<>]|\\<[^<>]+\\>)+\\>)+\\>|\\([^\\(\\)]+\\)|\\{[^\\{\\}]+\\})+)?                                                                        # return type\n  \\s*=>                                                                                               # arrow operator\n)\n  ))\n)))",
           "beginCaptures": {
-            "1": {
-              "name": "meta.definition.variable.tsx variable.other.constant.tsx entity.name.function.tsx"
-            }
+            "1": { "name": "meta.definition.variable.tsx variable.other.constant.tsx entity.name.function.tsx" }
           },
           "end": "(?=$|^|[;,=}]|((?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(of|in)\\s+))",
           "patterns": [{ "include": "#var-single-variable-type-annotation" }]
@@ -278,9 +270,7 @@
         {
           "name": "meta.var-single-variable.expr.tsx",
           "begin": "([_$[:alpha:]][_$[:alnum:]]*)",
-          "beginCaptures": {
-            "1": { "name": "meta.definition.variable.tsx variable.other.constant.tsx" }
-          },
+          "beginCaptures": { "1": { "name": "meta.definition.variable.tsx variable.other.constant.tsx" } },
           "end": "(?=$|^|[;,=}]|((?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(of|in)\\s+))",
           "patterns": [{ "include": "#var-single-variable-type-annotation" }]
         }
@@ -539,10 +529,7 @@
     },
     "destructuring-parameter-rest": {
       "match": "(?:(\\.\\.\\.)\\s*)?([_$[:alpha:]][_$[:alnum:]]*)",
-      "captures": {
-        "1": { "name": "keyword.operator.rest.tsx" },
-        "2": { "name": "variable.parameter.tsx" }
-      }
+      "captures": { "1": { "name": "keyword.operator.rest.tsx" }, "2": { "name": "variable.parameter.tsx" } }
     },
     "parameter-object-binding-pattern": {
       "begin": "(?:(\\.\\.\\.)\\s*)?(\\{)",
@@ -726,10 +713,7 @@
         { "include": "#string" },
         { "include": "#array-literal" },
         { "include": "#numeric-literal" },
-        {
-          "name": "meta.definition.method.tsx entity.name.function.tsx",
-          "match": "[_$[:alpha:]][_$[:alnum:]]*"
-        },
+        { "name": "meta.definition.method.tsx entity.name.function.tsx", "match": "[_$[:alpha:]][_$[:alnum:]]*" },
         { "name": "keyword.operator.optional.tsx", "match": "\\?" }
       ]
     },
@@ -738,10 +722,7 @@
         {
           "name": "meta.arrow.tsx",
           "match": "(?:(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(\\basync)\\s+)?([_$[:alpha:]][_$[:alnum:]]*)\\s*(?==>)",
-          "captures": {
-            "1": { "name": "storage.modifier.async.tsx" },
-            "2": { "name": "variable.parameter.tsx" }
-          }
+          "captures": { "1": { "name": "storage.modifier.async.tsx" }, "2": { "name": "variable.parameter.tsx" } }
         },
         {
           "name": "meta.arrow.tsx",
@@ -778,10 +759,7 @@
         "3": { "name": "variable.parameter.tsx" }
       },
       "end": "(\\])\\s*(\\?\\s*)?|$",
-      "endCaptures": {
-        "1": { "name": "meta.brace.square.tsx" },
-        "2": { "name": "keyword.operator.optional.tsx" }
-      },
+      "endCaptures": { "1": { "name": "meta.brace.square.tsx" }, "2": { "name": "keyword.operator.optional.tsx" } },
       "patterns": [{ "include": "#type-annotation" }]
     },
     "indexer-mapped-type-declaration": {
@@ -843,10 +821,7 @@
     "class-expression": {
       "name": "meta.class.tsx",
       "begin": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(?:(abstract)\\s+)?(class)\\b(?=\\s+|[<{]|\\/[\\/*])",
-      "beginCaptures": {
-        "1": { "name": "storage.modifier.tsx" },
-        "2": { "name": "storage.type.class.tsx" }
-      },
+      "beginCaptures": { "1": { "name": "storage.modifier.tsx" }, "2": { "name": "storage.type.class.tsx" } },
       "end": "(?<=\\})",
       "patterns": [{ "include": "#class-declaration-or-expression-patterns" }]
     },
@@ -854,10 +829,7 @@
       "patterns": [
         { "include": "#comment" },
         { "include": "#class-or-interface-heritage" },
-        {
-          "match": "[_$[:alpha:]][_$[:alnum:]]*",
-          "captures": { "0": { "name": "entity.name.type.class.tsx" } }
-        },
+        { "match": "[_$[:alpha:]][_$[:alnum:]]*", "captures": { "0": { "name": "entity.name.type.class.tsx" } } },
         { "include": "#type-parameters" },
         { "include": "#class-or-interface-body" }
       ]
@@ -875,10 +847,7 @@
       "patterns": [
         { "include": "#comment" },
         { "include": "#class-or-interface-heritage" },
-        {
-          "match": "[_$[:alpha:]][_$[:alnum:]]*",
-          "captures": { "0": { "name": "entity.name.type.interface.tsx" } }
-        },
+        { "match": "[_$[:alpha:]][_$[:alnum:]]*", "captures": { "0": { "name": "entity.name.type.interface.tsx" } } },
         { "include": "#type-parameters" },
         { "include": "#class-or-interface-body" }
       ]
@@ -1188,10 +1157,7 @@
         {
           "name": "switch-expression.expr.tsx",
           "begin": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(switch)\\s*(\\()",
-          "beginCaptures": {
-            "1": { "name": "keyword.control.switch.tsx" },
-            "2": { "name": "meta.brace.round.tsx" }
-          },
+          "beginCaptures": { "1": { "name": "keyword.control.switch.tsx" }, "2": { "name": "meta.brace.round.tsx" } },
           "end": "\\)",
           "endCaptures": { "0": { "name": "meta.brace.round.tsx" } },
           "patterns": [{ "include": "#expression" }]
@@ -1212,9 +1178,7 @@
             {
               "begin": "(:)\\s*(\\{)",
               "beginCaptures": {
-                "1": {
-                  "name": "case-clause.expr.tsx punctuation.definition.section.case-statement.tsx"
-                },
+                "1": { "name": "case-clause.expr.tsx punctuation.definition.section.case-statement.tsx" },
                 "2": { "name": "meta.block.tsx punctuation.definition.block.tsx" }
               },
               "end": "\\}",
@@ -1224,11 +1188,7 @@
             },
             {
               "match": "(:)",
-              "captures": {
-                "0": {
-                  "name": "case-clause.expr.tsx punctuation.definition.section.case-statement.tsx"
-                }
-              }
+              "captures": { "0": { "name": "case-clause.expr.tsx punctuation.definition.section.case-statement.tsx" } }
             },
             { "include": "#statements" }
           ]
@@ -1351,10 +1311,7 @@
         {
           "name": "meta.object.member.tsx",
           "match": "(?x)(?:([_$[:alpha:]][_$[:alnum:]]*)\\s*(?=(\\/\\*([^\\*]|(\\*[^\\/]))*\\*\\/\\s*)*:(\\s*\\/\\*([^\\*]|(\\*[^\\/]))*\\*\\/)*\\s*(\n  ((async\\s+)?(\n    (function\\s*[(<*]) |\n    (function\\s+) |\n    ([_$[:alpha:]][_$[:alnum:]]*\\s*=>)\n  )) |\n  ((async\\s*)?(\n    ((<\\s*$)|([\\(]\\s*((([\\{\\[]\\s*)?$)|((\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})\\s*((:\\s*\\{?$)|((\\s*([^<>\\(\\)\\{\\}]|\\<([^<>]|\\<([^<>]|\\<[^<>]+\\>)+\\>)+\\>|\\([^\\(\\)]+\\)|\\{[^\\{\\}]+\\})+\\s*)?=\\s*)))|((\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])\\s*((:\\s*\\[?$)|((\\s*([^<>\\(\\)\\{\\}]|\\<([^<>]|\\<([^<>]|\\<[^<>]+\\>)+\\>)+\\>|\\([^\\(\\)]+\\)|\\{[^\\{\\}]+\\})+\\s*)?=\\s*)))))) |\n    # sure shot arrow functions even if => is on new line\n(\n  (<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<]|\\<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<]|\\<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<])*\\>)*\\>)*>\\s*)?\n  [(]\\s*(\\/\\*([^\\*]|(\\*[^\\/]))*\\*\\/\\s*)*\n  (\n    ([)]\\s*:) |                                                                                       # ():\n    ((\\.\\.\\.\\s*)?[_$[:alpha:]][_$[:alnum:]]*\\s*:)                                                                  # [(]param: | [(]...param:\n  )\n) |\n(\n  [<]\\s*[_$[:alpha:]][_$[:alnum:]]*\\s+extends\\s*[^=>]                                                              # < typeparam extends\n) |\n# arrow function possible to detect only with => on same line\n(\n  (<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<]|\\<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<]|\\<\\s*([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\]))([^=<>]|=[^<])*\\>)*\\>)*>\\s*)?                                                                                 # typeparameters\n  \\(\\s*(\\/\\*([^\\*]|(\\*[^\\/]))*\\*\\/\\s*)*(([_$[:alpha:]]|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\.\\.\\.\\s*[_$[:alpha:]]))([^()\\'\\\"\\`]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))*)?\\)   # parameters\n  (\\s*:\\s*([^<>\\(\\)\\{\\}]|\\<([^<>]|\\<([^<>]|\\<[^<>]+\\>)+\\>)+\\>|\\([^\\(\\)]+\\)|\\{[^\\{\\}]+\\})+)?                                                                        # return type\n  \\s*=>                                                                                               # arrow operator\n)\n  ))\n)))",
-          "captures": {
-            "0": { "name": "meta.object-literal.key.tsx" },
-            "1": { "name": "entity.name.function.tsx" }
-          }
+          "captures": { "0": { "name": "meta.object-literal.key.tsx" }, "1": { "name": "entity.name.function.tsx" } }
         },
         {
           "name": "meta.object.member.tsx",
@@ -1376,10 +1333,7 @@
         {
           "name": "meta.object.member.tsx",
           "match": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(as)\\s+(const)(?=\\s*([,}]|$))",
-          "captures": {
-            "1": { "name": "keyword.control.as.tsx" },
-            "2": { "name": "storage.modifier.tsx" }
-          }
+          "captures": { "1": { "name": "keyword.control.as.tsx" }, "2": { "name": "storage.modifier.tsx" } }
         },
         {
           "name": "meta.object.member.tsx",
@@ -1397,9 +1351,7 @@
         {
           "name": "meta.object.member.tsx",
           "begin": ":",
-          "beginCaptures": {
-            "0": { "name": "meta.object-literal.key.tsx punctuation.separator.key-value.tsx" }
-          },
+          "beginCaptures": { "0": { "name": "meta.object-literal.key.tsx punctuation.separator.key-value.tsx" } },
           "end": "(?=,|\\})",
           "patterns": [
             {
@@ -1616,10 +1568,7 @@
         },
         {
           "match": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(yield)(?![_$[:alnum:]])(?:(?=\\.\\.\\.)|(?!\\.))(?:\\s*(\\*))?",
-          "captures": {
-            "1": { "name": "keyword.control.flow.tsx" },
-            "2": { "name": "keyword.generator.asterisk.tsx" }
-          }
+          "captures": { "1": { "name": "keyword.control.flow.tsx" }, "2": { "name": "keyword.generator.asterisk.tsx" } }
         },
         {
           "name": "keyword.operator.expression.delete.tsx",
@@ -1648,10 +1597,7 @@
         },
         {
           "match": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(as)\\s+(const)(?=\\s*($|[;,:})\\]]))",
-          "captures": {
-            "1": { "name": "keyword.control.as.tsx" },
-            "2": { "name": "storage.modifier.tsx" }
-          }
+          "captures": { "1": { "name": "keyword.control.as.tsx" }, "2": { "name": "storage.modifier.tsx" } }
         },
         {
           "begin": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(as)\\s+",
@@ -1660,14 +1606,8 @@
           "patterns": [{ "include": "#type" }]
         },
         { "name": "keyword.operator.spread.tsx", "match": "\\.\\.\\." },
-        {
-          "name": "keyword.operator.assignment.compound.tsx",
-          "match": "\\*=|(?<!\\()/=|%=|\\+=|\\-="
-        },
-        {
-          "name": "keyword.operator.assignment.compound.bitwise.tsx",
-          "match": "\\&=|\\^=|<<=|>>=|>>>=|\\|="
-        },
+        { "name": "keyword.operator.assignment.compound.tsx", "match": "\\*=|(?<!\\()/=|%=|\\+=|\\-=" },
+        { "name": "keyword.operator.assignment.compound.bitwise.tsx", "match": "\\&=|\\^=|<<=|>>=|>>>=|\\|=" },
         { "name": "keyword.operator.bitwise.shift.tsx", "match": "<<|>>>|>>" },
         { "name": "keyword.operator.comparison.tsx", "match": "===|!==|==|!=" },
         { "name": "keyword.operator.relational.tsx", "match": "<=|>=|<>|<|>" },
@@ -1915,19 +1855,13 @@
             "3": { "name": "variable.other.property.tsx" }
           }
         },
-        {
-          "name": "variable.other.constant.tsx",
-          "match": "([[:upper:]][_$[:digit:][:upper:]]*)(?![_$[:alnum:]])"
-        },
+        { "name": "variable.other.constant.tsx", "match": "([[:upper:]][_$[:digit:][:upper:]]*)(?![_$[:alnum:]])" },
         { "name": "variable.other.readwrite.tsx", "match": "[_$[:alpha:]][_$[:alnum:]]*" }
       ]
     },
     "object-identifiers": {
       "patterns": [
-        {
-          "name": "support.class.tsx",
-          "match": "([_$[:alpha:]][_$[:alnum:]]*)(?=\\s*\\??\\.\\s*prototype\\b(?!\\$))"
-        },
+        { "name": "support.class.tsx", "match": "([_$[:alpha:]][_$[:alnum:]]*)(?=\\s*\\??\\.\\s*prototype\\b(?!\\$))" },
         {
           "match": "(?x)(?:(\\.)|(\\?\\.(?!\\s*[[:digit:]])))\\s*(?:\n  (\\#?[[:upper:]][_$[:digit:][:upper:]]*) |\n  (\\#?[_$[:alpha:]][_$[:alnum:]]*)\n)(?=\\s*\\??\\.\\s*\\#?[_$[:alpha:]][_$[:alnum:]]*)",
           "captures": {
@@ -1996,11 +1930,7 @@
     "return-type-core": {
       "patterns": [
         { "include": "#comment" },
-        {
-          "begin": "(?<=[:|&])(?=\\s*\\{)",
-          "end": "(?<=\\})",
-          "patterns": [{ "include": "#type-object" }]
-        },
+        { "begin": "(?<=[:|&])(?=\\s*\\{)", "end": "(?<=\\})", "patterns": [{ "include": "#type-object" }] },
         { "include": "#type-predicate-operator" },
         { "include": "#type" }
       ]
@@ -2015,9 +1945,7 @@
     "possibly-arrow-return-type": {
       "begin": "(?<=\\)|^)\\s*(:)(?=\\s*([^<>\\(\\)\\{\\}]|\\<([^<>]|\\<([^<>]|\\<[^<>]+\\>)+\\>)+\\>|\\([^\\(\\)]+\\)|\\{[^\\{\\}]+\\})+\\s*=>)",
       "beginCaptures": {
-        "1": {
-          "name": "meta.arrow.tsx meta.return.type.arrow.tsx keyword.operator.type.annotation.tsx"
-        }
+        "1": { "name": "meta.arrow.tsx meta.return.type.arrow.tsx keyword.operator.type.annotation.tsx" }
       },
       "end": "(?==>|\\{|(^\\s*(export|function|class|interface|let|var|const|import|enum|namespace|module|type|abstract|declare)\\s+))",
       "contentName": "meta.arrow.tsx meta.return.type.arrow.tsx",
@@ -2025,11 +1953,7 @@
     },
     "arrow-return-type-body": {
       "patterns": [
-        {
-          "begin": "(?<=[:])(?=\\s*\\{)",
-          "end": "(?<=\\})",
-          "patterns": [{ "include": "#type-object" }]
-        },
+        { "begin": "(?<=[:])(?=\\s*\\{)", "end": "(?<=\\})", "patterns": [{ "include": "#type-object" }] },
         { "include": "#type-predicate-operator" },
         { "include": "#type" }
       ]
@@ -2238,11 +2162,7 @@
     "type-function-return-type-core": {
       "patterns": [
         { "include": "#comment" },
-        {
-          "begin": "(?<==>)(?=\\s*\\{)",
-          "end": "(?<=\\})",
-          "patterns": [{ "include": "#type-object" }]
-        },
+        { "begin": "(?<==>)(?=\\s*\\{)", "end": "(?<=\\})", "patterns": [{ "include": "#type-object" }] },
         { "include": "#type-predicate-operator" },
         { "include": "#type" }
       ]
@@ -2256,11 +2176,7 @@
           "end": "(?<=\\})",
           "patterns": [{ "include": "#type-object" }]
         },
-        {
-          "begin": "[&|]",
-          "beginCaptures": { "0": { "name": "keyword.operator.type.tsx" } },
-          "end": "(?=\\S)"
-        },
+        { "begin": "[&|]", "beginCaptures": { "0": { "name": "keyword.operator.type.tsx" } }, "end": "(?=\\S)" },
         {
           "name": "keyword.operator.expression.keyof.tsx",
           "match": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))keyof(?![_$[:alnum:]])(?:(?=\\.\\.\\.)|(?!\\.))"
@@ -2317,16 +2233,10 @@
             "1": { "name": "entity.name.type.module.tsx" },
             "2": { "name": "punctuation.accessor.tsx" },
             "3": { "name": "punctuation.accessor.optional.tsx" },
-            "4": {
-              "name": "meta.type.parameters.tsx punctuation.definition.typeparameters.begin.tsx"
-            }
+            "4": { "name": "meta.type.parameters.tsx punctuation.definition.typeparameters.begin.tsx" }
           },
           "end": "(>)",
-          "endCaptures": {
-            "1": {
-              "name": "meta.type.parameters.tsx punctuation.definition.typeparameters.end.tsx"
-            }
-          },
+          "endCaptures": { "1": { "name": "meta.type.parameters.tsx punctuation.definition.typeparameters.end.tsx" } },
           "contentName": "meta.type.parameters.tsx",
           "patterns": [{ "include": "#type-arguments-body" }]
         },
@@ -2334,16 +2244,10 @@
           "begin": "([_$[:alpha:]][_$[:alnum:]]*)\\s*(<)",
           "beginCaptures": {
             "1": { "name": "entity.name.type.tsx" },
-            "2": {
-              "name": "meta.type.parameters.tsx punctuation.definition.typeparameters.begin.tsx"
-            }
+            "2": { "name": "meta.type.parameters.tsx punctuation.definition.typeparameters.begin.tsx" }
           },
           "end": "(>)",
-          "endCaptures": {
-            "1": {
-              "name": "meta.type.parameters.tsx punctuation.definition.typeparameters.end.tsx"
-            }
-          },
+          "endCaptures": { "1": { "name": "meta.type.parameters.tsx punctuation.definition.typeparameters.end.tsx" } },
           "contentName": "meta.type.parameters.tsx",
           "patterns": [{ "include": "#type-arguments-body" }]
         },
@@ -2362,10 +2266,7 @@
     "punctuation-semicolon": { "name": "punctuation.terminator.statement.tsx", "match": ";" },
     "punctuation-accessor": {
       "match": "(?:(\\.)|(\\?\\.(?!\\s*[[:digit:]])))",
-      "captures": {
-        "1": { "name": "punctuation.accessor.tsx" },
-        "2": { "name": "punctuation.accessor.optional.tsx" }
-      }
+      "captures": { "1": { "name": "punctuation.accessor.tsx" }, "2": { "name": "punctuation.accessor.optional.tsx" } }
     },
     "string": {
       "patterns": [{ "include": "#qstring-single" }, { "include": "#qstring-double" }, { "include": "#template" }]
@@ -2424,10 +2325,7 @@
               "end": "(?=(<\\s*(((keyof|infer|awaited|typeof|readonly)\\s+)|(([_$[:alpha:]][_$[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|awaited|typeof|readonly)\\s+)|(([_$[:alpha:]][_$[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))(([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|awaited|typeof|readonly)\\s+)|(([_$[:alpha:]][_$[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>)*(?<!=)\\>))*(?<!=)\\>)*(?<!=)>\\s*)?`)",
               "patterns": [
                 { "include": "#support-function-call-identifiers" },
-                {
-                  "name": "entity.name.function.tagged-template.tsx",
-                  "match": "([_$[:alpha:]][_$[:alnum:]]*)"
-                }
+                { "name": "entity.name.function.tagged-template.tsx", "match": "([_$[:alpha:]][_$[:alnum:]]*)" }
               ]
             },
             { "include": "#type-arguments" }
@@ -2515,10 +2413,7 @@
             "1": { "name": "variable.other.regexp" }
           }
         },
-        {
-          "name": "keyword.operator.quantifier.regexp",
-          "match": "[?+*]|\\{(\\d+,\\d+|\\d+,|,\\d+|\\d+)\\}\\??"
-        },
+        { "name": "keyword.operator.quantifier.regexp", "match": "[?+*]|\\{(\\d+,\\d+|\\d+,|,\\d+|\\d+)\\}\\??" },
         { "name": "keyword.operator.or.regexp", "match": "\\|" },
         {
           "name": "meta.group.assertion.regexp",
@@ -2578,10 +2473,7 @@
     "regex-character-class": {
       "patterns": [
         { "name": "constant.other.character-class.regexp", "match": "\\\\[wWsSdDtrnvf]|\\." },
-        {
-          "name": "constant.character.numeric.regexp",
-          "match": "\\\\([0-7]{3}|x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4})"
-        },
+        { "name": "constant.character.numeric.regexp", "match": "\\\\([0-7]{3}|x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4})" },
         { "name": "constant.character.control.regexp", "match": "\\\\c[A-Z]" },
         { "name": "constant.character.escape.backslash.regexp", "match": "\\\\." }
       ]
@@ -2649,10 +2541,7 @@
           "end": "/>",
           "endCaptures": { "0": { "name": "punctuation.definition.tag.directive.tsx" } },
           "patterns": [
-            {
-              "name": "entity.other.attribute-name.directive.tsx",
-              "match": "path|types|no-default-lib|lib|name"
-            },
+            { "name": "entity.other.attribute-name.directive.tsx", "match": "path|types|no-default-lib|lib|name" },
             { "name": "keyword.operator.assignment.tsx", "match": "=" },
             { "include": "#string" }
           ]
@@ -2715,10 +2604,7 @@
                 "2": { "name": "punctuation.definition.bracket.angle.end.jsdoc" }
               }
             },
-            {
-              "match": "[^\\s@*](?:[^*]|\\*[^/])*",
-              "captures": { "0": { "name": "source.embedded.tsx" } }
-            }
+            { "match": "[^\\s@*](?:[^*]|\\*[^/])*", "captures": { "0": { "name": "source.embedded.tsx" } } }
           ]
         },
         {
