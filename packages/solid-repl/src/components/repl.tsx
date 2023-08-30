@@ -43,7 +43,7 @@ export const Repl: ReplProps = (props) => {
   const tabRefs = new Map<number, HTMLSpanElement>();
 
   const [error, setError] = createSignal('');
-  const [output, setOutput] = createSignal('');
+  const [output, setOutput] = createSignal<Record<string, string>>({});
   const [mode, setMode] = createSignal<(typeof compileMode)[keyof typeof compileMode]>(compileMode.DOM);
 
   const userTabs = () => props.tabs.filter((tab) => tab.name != 'import_map.json');
@@ -115,39 +115,25 @@ export const Repl: ReplProps = (props) => {
 
     if (event === 'BABEL') {
       outputModel.setValue(compiled);
-      setOutput('');
-    }
-
-    if (event === 'ROLLUP') {
-      const currentMap = { ...importMap() };
-      for (const file in currentMap) {
-        if (!(file in compiled) && currentMap[file] === `https://jspm.dev/${file}`) {
-          delete currentMap[file];
-        }
-      }
-      for (const file in compiled) {
-        if (!(file in currentMap) && !file.startsWith('./')) {
-          currentMap[file] = compiled[file];
-        }
-      }
+      setOutput({});
+    } else if (event === 'ROLLUP') {
       console.log(`Compilation took: ${performance.now() - now}ms`);
 
       batch(() => {
         let tab = props.tabs.find((tab) => tab.name === 'import_map.json');
         if (!tab) {
+          const currentMap = {
+            'solid-js': 'https://jspm.dev/solid-js',
+            'solid-js/web': 'https://jspm.dev/solid-js/web',
+          };
           tab = {
             name: 'import_map.json',
             source: JSON.stringify(currentMap, null, 2),
           };
           props.setTabs(props.tabs.concat(tab));
-        } else {
-          tab.source = JSON.stringify(currentMap, null, 2);
-          const { model } = monacoTabs().get(`file:///${props.id}/import_map.json`)!;
-          model.setValue(tab.source);
+          setImportMap(currentMap);
         }
-
-        setOutput(compiled['./main']);
-        setImportMap(currentMap);
+        setOutput(compiled);
       });
     }
   };
@@ -419,6 +405,7 @@ export const Repl: ReplProps = (props) => {
               reloadSignal={reloadSignal()}
               devtools={devtoolsOpen()}
               isDark={props.dark}
+              iframeSrcUrl={props.previewUrl}
             />
           </Match>
           <Match when={outputTab() == 1}>

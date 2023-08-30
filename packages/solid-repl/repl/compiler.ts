@@ -6,10 +6,6 @@ import babelPresetSolid from 'babel-preset-solid';
 
 import dd from 'dedent';
 
-let files: Record<string, string> = {};
-let cache: Record<string, string> = {};
-let dataToReturn: Record<string, string> = {};
-
 function uid(str: string) {
   return Array.from(str)
     .reduce((s, c) => (Math.imul(31, s) + c.charCodeAt(0)) | 0, 0)
@@ -18,33 +14,6 @@ function uid(str: string) {
 
 function babelTransform(filename: string, code: string) {
   let { code: transformedCode } = transform(code, {
-    plugins: [
-      // Babel plugin to get file import names
-      function importGetter() {
-        return {
-          visitor: {
-            Import(path: any) {
-              const importee: string = path.parent.arguments[0].value;
-              cache[importee] = path.parent.arguments[0].value = transformImportee(importee);
-            },
-            ImportDeclaration(path: any) {
-              const importee: string = path.node.source.value;
-              cache[importee] = path.node.source.value = transformImportee(importee);
-            },
-            ExportAllDeclaration(path: any) {
-              const importee: string = path.node.source.value;
-              cache[importee] = path.node.source.value = transformImportee(importee);
-            },
-            ExportNamedDeclaration(path: any) {
-              const importee: string = path.node.source?.value;
-              if (importee) {
-                cache[importee] = path.node.source.value = transformImportee(importee);
-              }
-            },
-          },
-        };
-      },
-    ],
     presets: [
       [babelPresetSolid, { generate: 'dom', hydratable: false }],
       ['typescript', { onlyRemoveTypeImports: true }],
@@ -56,44 +25,10 @@ function babelTransform(filename: string, code: string) {
 }
 
 // Returns new import URL
-function transformImportee(fileName: string) {
-  // There's no point re-visiting a node again, as it's already been processed
-  if (fileName in cache) {
-    return cache[fileName];
-  }
-  if (!fileName) {
-    return '';
-  }
-
-  // Base cases
-  if (fileName.includes('://') || !fileName.startsWith('.')) {
-    if (fileName.endsWith('.css')) {
-      const id = uid(fileName);
-      const js = dd`
-        (() => {
-          let link = document.getElementById('${id}');
-          if (!link) {
-            link = document.createElement('link')
-            link.setAttribute('id', ${id})
-            document.head.appendChild(link)
-          }
-          link.setAttribute('rel', 'stylesheet')
-          link.setAttribute('href', '${fileName}')
-        })()
-      `;
-      const url = URL.createObjectURL(new Blob([js], { type: 'application/javascript' }));
-      return url;
-    }
-    if (fileName.includes('://')) return fileName;
-    else {
-      dataToReturn[fileName] = `https://jspm.dev/${fileName}`;
-      return fileName;
-    }
-  }
+function transformImportee(fileName: string, contents: string) {
   if (fileName.endsWith('.css')) {
-    const contents = files[fileName];
     const id = uid(fileName);
-    const js = dd`
+    return dd`
     (() => {
       let stylesheet = document.getElementById('${id}');
       if (!stylesheet) {
@@ -106,36 +41,17 @@ function transformImportee(fileName: string) {
       stylesheet.appendChild(styles)
     })()
   `;
-    const url = URL.createObjectURL(new Blob([js], { type: 'application/javascript' }));
-    return url;
+  } else {
+    return babelTransform(fileName, contents);
   }
-
-  // Parse file and all its children through recursion
-  cache[fileName] = ''; // Prevent infinite recursion
-  const js = babelTransform(fileName, files[fileName]);
-  const url = URL.createObjectURL(new Blob([js], { type: 'application/javascript' }));
-  return url;
-}
-
-function bundle(entryPoint: string, fileRecord: Record<string, string>) {
-  files = fileRecord;
-  for (let out in dataToReturn) {
-    const url = dataToReturn[out];
-    if (url.startsWith('blob:')) URL.revokeObjectURL(dataToReturn[out]);
-  }
-  cache = {};
-  dataToReturn = {};
-  dataToReturn[entryPoint] = transformImportee(entryPoint);
-  return dataToReturn;
 }
 
 function compile(tabs: Tab[], event: string) {
   const tabsRecord: Record<string, string> = {};
   for (const tab of tabs) {
-    tabsRecord[`./${tab.name.replace(/.(tsx|jsx)$/, '')}`] = tab.source;
+    tabsRecord[`./${tab.name.replace(/.(tsx|jsx)$/, '')}`] = transformImportee(tab.name, tab.source);
   }
-  const bundled = bundle('./main', tabsRecord);
-  return { event, compiled: bundled };
+  return { event, compiled: tabsRecord };
 }
 
 function babel(tab: Tab, compileOpts: any) {

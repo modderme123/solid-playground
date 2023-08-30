@@ -260,6 +260,7 @@ export const Edit = (props: { horizontal: boolean }) => {
             reset={reset}
             current={current()}
             setCurrent={setCurrent}
+            previewUrl="http://localhost:5273"
             id="repl"
           />
         </Show>

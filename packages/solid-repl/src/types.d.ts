@@ -15,6 +15,7 @@ declare module 'solid-repl/dist/repl' {
     isHorizontal: boolean;
     dark: boolean;
     tabs: Tab[];
+    previewUrl: string;
     id: string;
     hideDevtools?: boolean;
     setTabs: (tab: Tab[]) => void;
