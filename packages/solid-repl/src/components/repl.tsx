@@ -13,6 +13,7 @@ import { DockviewComponent, GridviewComponent, Orientation } from 'dockview-core
 import '../../node_modules/dockview-core/dist/styles/dockview.css';
 import { FileTree } from './fileTree';
 import { SolidGridPanelView, frameworkComponentFactory } from '../dockview/solid';
+import { TabItem } from './tabs';
 
 const compileMode = {
   SSR: { generate: 'ssr', hydratable: true },
@@ -229,6 +230,89 @@ export const Repl: ReplProps = (props) => {
     const dockview = new DockviewComponent({
       parentElement: ref,
       frameworkComponentFactory,
+      defaultTabComponent: 'tabby',
+      frameworkTabComponents: {
+        tabby: (props: { title: string; params: { hideClose?: boolean } }) => {
+          const params = props.params;
+          const [active, setActive] = createSignal(false);
+          // @ts-ignore
+          props.api.onDidActiveChange(({ isActive }: { isActive: boolean }) => {
+            console.log(setActive(isActive));
+          });
+
+          const hideClose = params.hideClose ?? false;
+          return (
+            // <div>
+            //   <span class="dockview-react-tab-title">{props.title}</span>
+            //   {!hideClose && (
+            //     <div
+            //       class="dv-react-tab-close-btn"
+            //       onClick={() => {
+            //         props.api.close();
+            //       }}
+            //     >
+            //       {/* <CloseButton /> */}
+            //       Hello
+            //     </div>
+            //   )}
+            // </div>
+            <TabItem active={active()} class="mr-2">
+              <div
+                // ref={(el) => tabRefs.set(index(), el)}
+                class="cursor-pointer select-none rounded border border-solid border-transparent px-3 py-2 transition"
+                // classList={{
+                //   'border-transparent': edit() !== index(),
+                //   'border-blue-600 outline-none': edit() === index(),
+                // }}
+                // contentEditable={edit() == index()}
+                // onBlur={(e) => {
+                //   if (edit() !== index()) return;
+                //   setEdit(-1);
+                //   setCurrentName(e.currentTarget.textContent!);
+                // }}
+                // onKeyDown={(e) => {
+                //   if (e.code === 'Space') e.preventDefault();
+                //   if (e.code !== 'Enter') return;
+                //   if (edit() === index()) {
+                //     setEdit(-1);
+                //     setCurrentName(e.currentTarget.textContent!);
+                //     e.currentTarget.blur();
+                //   } else {
+                //     setCurrentTab(tab.name);
+                //   }
+                // }}
+                // onClick={() => setCurrentTab(tab.name)}
+                // onDblClick={(e) => {
+                //   e.preventDefault();
+                //   setEdit(index());
+                //   tabRefs.get(index())?.focus();
+                // }}
+                title={props.title}
+                role="button"
+                tabindex="0"
+              >
+                {props.title}
+              </div>
+
+              <Show when={!hideClose}>
+                <button
+                  type="button"
+                  class="cursor-pointer"
+                  onClick={() => {
+                    // @ts-ignore
+                    props.api.close();
+                  }}
+                >
+                  <span class="sr-only">Delete this tab</span>
+                  <svg style="stroke: currentColor; fill: none;" class="h-4 opacity-60" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </Show>
+            </TabItem>
+          );
+        },
+      },
       frameworkComponents: {
         editor: (params: { currentModel: editor.ITextModel }) => (
           <Editor
@@ -365,11 +449,12 @@ export const Repl: ReplProps = (props) => {
         'Output': {
           id: 'Output',
           contentComponent: 'output',
+          params: { hideClose: true },
         },
         'Preview': {
           id: 'Preview',
           contentComponent: 'preview',
-          tabComponent: '',
+          params: { hideClose: true },
           renderer: 'always',
         },
         [props.current!]: {

@@ -68,7 +68,7 @@ export const frameworkComponentFactory: GroupPanelFrameworkComponentFactory = {
         init: (params) => {
           if (params.api.isVisible) {
             createRoot((dispose) => {
-              insert(element, () => component(params.params));
+              insert(element, () => component(params));
               disposer = dispose;
             });
           }
