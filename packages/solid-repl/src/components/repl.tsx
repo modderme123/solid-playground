@@ -237,7 +237,7 @@ export const Repl: ReplProps = (props) => {
           const [active, setActive] = createSignal(false);
           // @ts-ignore
           props.api.onDidActiveChange(({ isActive }: { isActive: boolean }) => {
-            console.log(setActive(isActive));
+            setActive(isActive)
           });
 
           const hideClose = params.hideClose ?? false;
