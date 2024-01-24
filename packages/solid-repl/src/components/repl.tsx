@@ -9,17 +9,13 @@ import { createMonacoTabs } from './editor/monacoTabs';
 import Editor from './editor';
 import type { Repl as ReplProps } from 'solid-repl/dist/repl';
 import type { Tab } from 'solid-repl';
-import {
-  DockviewComponent,
-  GridviewComponent,
-  Orientation,
-} from 'dockview-core';
+import { DockviewComponent, GridviewComponent, Orientation } from 'dockview-core';
 import '../../node_modules/dockview-core/dist/styles/dockview.css';
 import { FileTree } from './fileTree';
 import { SolidGridPanelView, frameworkComponentFactory } from '../dockview/solid';
 import { TabItem } from './tabs';
 import { Icon } from 'solid-heroicons';
-import { trash } from 'solid-heroicons/outline';
+import { arrowPath, trash } from 'solid-heroicons/outline';
 
 const compileMode = {
   SSR: { generate: 'ssr', hydratable: true },
@@ -239,23 +235,48 @@ export const Repl: ReplProps = (props) => {
       defaultTabComponent: 'tabby',
       // @ts-ignore
       createRightHeaderActionsElement(group) {
-        console.log(group.api);
-        console.log(group.params);
+        queueMicrotask(() => {
+          const views: string[] = group.toJSON().views;
+          if (views.includes('Preview')) {
+            sS(false);
+          }
+          if (views.includes('main.tsx')) {
+            sS(true);
+          }
+        });
+        const [s, sS] = createSignal();
         return frameworkComponentFactory.content.createComponent('button_panel', 'button_panel', () => (
-          <TabItem class="ml-auto justify-self-end">
-            <button
-              class="cursor-pointer space-x-2 px-2 py-2"
-              onClick={() => {
-                const confirmReset = confirm('Are you sure you want to reset the editor?');
-                if (!confirmReset) return;
-                props.reset();
-              }}
-              title="Reset Editor"
-            >
-              <Icon path={trash} class="h-5" />
-              <span class="sr-only">Reset Editor</span>
-            </button>
-          </TabItem>
+          <>
+            <Show when={s() === true}>
+              <TabItem class="ml-auto justify-self-end">
+                <button
+                  class="cursor-pointer space-x-2 px-2 py-2"
+                  onClick={() => {
+                    const confirmReset = confirm('Are you sure you want to reset the editor?');
+                    if (!confirmReset) return;
+                    props.reset();
+                  }}
+                  title="Reset Editor"
+                >
+                  <Icon path={trash} class="h-5" />
+                  <span class="sr-only">Reset Editor</span>
+                </button>
+              </TabItem>
+            </Show>
+            <Show when={s() === false}>
+              <TabItem>
+                <button
+                  type="button"
+                  title="Refresh the page"
+                  class="px-3 py-2 active:animate-spin disabled:animate-none disabled:cursor-not-allowed disabled:opacity-25"
+                  onClick={[reload, true]}
+                >
+                  <span class="sr-only">Refresh the page</span>
+                  <Icon path={arrowPath} class="h-5" />
+                </button>
+              </TabItem>
+            </Show>
+          </>
         ));
       },
       frameworkTabComponents: {
